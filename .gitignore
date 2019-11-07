@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Big Proj Files
+Debug/
+Release/

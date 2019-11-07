@@ -1,3 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Multithreading.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  main.cpp
-  Multithreading.vcxproj -> C:\Users\s189076\source\repos\ComplexGameSystems\Debug\Multithreading1.exe
