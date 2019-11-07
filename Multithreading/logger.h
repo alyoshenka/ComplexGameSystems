@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include <thread>
 
 using std::string;
 using std::ofstream;
@@ -12,14 +13,16 @@ class logger
 	string fileName;
 	string data;
 
-	int threadCountInside;
-	int threadCountOutside;
+	ofstream writeFile;
+
+	std::thread fileIOThread;
 
 	logger();
 
 public:
 
 	logger(string fileOut);
+	~logger();
 
 	void accept(string value);
 	void write();
@@ -27,10 +30,6 @@ public:
 
 	void writeThread(string fileName, string data);
 
-	bool canExit();
-
 	void assertCorrectOrder();
+	void clearFile();
 };
-
-
-

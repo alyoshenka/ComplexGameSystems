@@ -29,14 +29,14 @@ int main()
 	*/
 
 	logger log("output.txt");
-	// log.accept("beep");
-	// log.write();
-	for (int i = 0; i < 1000; i++)
+	// log.clearFile();
+	log.accept("-1");
+	log.write();
+	for (int i = 0; i < 5000; i++)
 	{
 		log.write(std::to_string(i + 1));
 	}
 
-	while (!log.canExit()) {}
 	log.assertCorrectOrder();
 
 	return 0;

@@ -1,19 +1,27 @@
 #include "logger.h"
 
 #include <cassert>
-#include <thread>
 #include <mutex>
+
+#include <iostream>
 
 using std::ifstream;
 
 logger::logger()
 {
 	fileName = "boop.txt";
+	writeFile.open(fileName, ios::app);
+}
+
+logger::~logger()
+{
+	writeFile.close();
 }
 
 logger::logger(string fileOut)
 {
 	fileName = fileOut;
+	writeFile.open(fileName, ios::app);
 }
 
 void logger::accept(string value)
@@ -23,42 +31,24 @@ void logger::accept(string value)
 
 void logger::write()
 {
-	std::thread newThread(&logger::writeThread, this, fileName, data);
-	newThread.join();
+	write(data);
 }
 
 void logger::write(string curData)
 {
-	threadCountInside++;
-	std::thread newThread(&logger::writeThread, this, fileName, curData);	
-	newThread.detach();
+	std::thread fileIOThread(&logger::writeThread, this, fileName, curData);
+	fileIOThread.join(); // maintain order
 }
 
 void logger::writeThread(string fileName, string data)
 {
 	static std::mutex myMutex;
-	static int lastData;
-	int currentData = std::stoi(data);
-
-	assert(currentData > lastData);
 
 	std::lock_guard<std::mutex> guard(myMutex);
 
-	ofstream myFile;
-	myFile.open(fileName, ios::app);
+	assert(writeFile.is_open());
 
-	assert(myFile.is_open());
-
-	myFile << data << "\n";
-	myFile.close();
-
-	threadCountOutside++;
-	lastData = currentData;
-}
-
-bool logger::canExit()
-{
-	return threadCountInside == threadCountOutside;
+	writeFile << data << "\n";
 }
 
 void logger::assertCorrectOrder()
@@ -70,7 +60,7 @@ void logger::assertCorrectOrder()
 
 	string line;
 	int currentLine, lastLine;
-	currentLine = lastLine = 0;
+	currentLine = lastLine = -2;
 
 	while (std::getline(myFile, line))
 	{
@@ -78,5 +68,10 @@ void logger::assertCorrectOrder()
 		assert(currentLine > lastLine);
 		lastLine = currentLine;
 	}
-	myFile.close();
+	myFile.close();	
+}
+
+void logger::clearFile()
+{
+	assert(remove(fileName.c_str()) == 0);
 }
