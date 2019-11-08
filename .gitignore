@@ -37,3 +37,4 @@ Release/
 
 # Misc
 *.opendb
+.vs/
