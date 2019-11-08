@@ -36,8 +36,18 @@ void logger::write()
 
 void logger::write(string curData)
 {
-	std::thread fileIOThread(&logger::writeThread, this, fileName, curData);
+	fileIOThread = std::thread(&logger::writeThread, this, fileName, curData);
 	fileIOThread.join(); // maintain order
+}
+
+void logger::writeReusable(string curData)
+{
+	dataToWrite.push(curData);
+
+	if (!fileIOThread.joinable()) 
+	{ 
+		fileIOThread = std::thread(&logger::writeThreadReusable, this, fileName); 
+	}
 }
 
 void logger::writeThread(string fileName, string data)
@@ -49,6 +59,20 @@ void logger::writeThread(string fileName, string data)
 	assert(writeFile.is_open());
 
 	writeFile << data << "\n";
+}
+
+void logger::writeThreadReusable(string fileName)
+{
+	static std::mutex myMutex;
+	std::lock_guard<std::mutex> guard(myMutex);
+
+	while(!dataToWrite.empty())
+	{
+		writeFile << dataToWrite.back() << "\n";
+		dataToWrite.pop();
+	}
+
+	fileIOThread.join();
 }
 
 void logger::assertCorrectOrder()
@@ -65,7 +89,7 @@ void logger::assertCorrectOrder()
 	while (std::getline(myFile, line))
 	{
 		currentLine = std::stoi(line);
-		assert(currentLine > lastLine);
+		if (currentLine != -1) { assert(currentLine > lastLine); }
 		lastLine = currentLine;
 	}
 	myFile.close();	

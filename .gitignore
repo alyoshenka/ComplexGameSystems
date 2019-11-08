@@ -34,3 +34,6 @@
 # Big Proj Files
 Debug/
 Release/
+
+# Misc
+*.opendb

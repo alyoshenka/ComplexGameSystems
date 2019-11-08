@@ -2,42 +2,47 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <cassert>
 
 #include "logger.h"
+#include "aCircularQueue.h"
 
-void print(int a)
+
+void runLogger()
 {
-	static std::mutex consoleLock; // same instance used between multiple calls
-	
-	consoleLock.lock();
-
-	std::cout << "hello thread: " << a << std::endl;
-
-	consoleLock.unlock();
-}
-
-int main()
-{
-	/*
-	std::vector<std::thread> threads;
-	for(int i = 0; i < 100; i++)
-	{
-		threads.emplace_back(print, i + 1); // variatic function
-	}
-	
-	for (auto& t : threads) { t.join(); }
-	*/
-
 	logger log("output.txt");
 	// log.clearFile();
 	log.accept("-1");
 	log.write();
 	for (int i = 0; i < 5000; i++)
 	{
-		log.write(std::to_string(i + 1));
+		log.writeReusable(std::to_string(i + 1));
 	}
 
-	log.assertCorrectOrder();
+	// log.assertCorrectOrder();
+}
+
+void runCircleQueue()
+{
+	aCircularQueue<int> a;
+
+	assert(a.getSize() == 0);
+	assert(a.isEmpty());
+
+	int count = 5;
+	for (int i = 0; i < count; i++) { a.push(i + 1); }
+
+	assert(a.getSize() == count);
+	assert(!a.isEmpty());
+	assert(a.front() == 1);
+	assert(a.back() == 5);	
+}
+
+int main()
+{
+	// runLogger();
+	runCircleQueue();
 
 	return 0;
 }
+
