@@ -30,12 +30,28 @@ void runCircleQueue()
 	assert(a.isEmpty());
 
 	int count = 5;
-	for (int i = 0; i < count; i++) { a.push(i + 1); }
+	for (int i = 1; i <= count; i++) { a.push(i); }
 
 	assert(a.getSize() == count);
 	assert(!a.isEmpty());
 	assert(a.front() == 1);
 	assert(a.back() == 5);	
+
+	a.pop();
+	assert(a.getSize() == count - 1);
+	assert(!a.isEmpty());
+	assert(a.front() == 2);
+	assert(a.back() == 5);
+
+	for (int i = 0; i < 4; i++) { a.pop(); }
+
+	assert(a.isEmpty());
+
+	for (int i = 1; i <= 8; i++) 
+	{ 
+		std::cout << i << std::endl;
+		a.push(i); 
+	}
 }
 
 int main()
@@ -43,6 +59,6 @@ int main()
 	// runLogger();
 	runCircleQueue();
 
-	return 0;
+	return 0; 
 }
 

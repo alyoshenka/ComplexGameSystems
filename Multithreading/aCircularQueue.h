@@ -12,8 +12,8 @@ private:
 
 	size_t frontIndex;
 
-	int getFront();
-	int getBack();
+	int getFrontIndex();
+	int getBackIndex();
 
 public:
 
@@ -32,17 +32,20 @@ public:
 };
 
 template<typename T>
-inline int aCircularQueue<T>::getFront()
+inline int aCircularQueue<T>::getFrontIndex()
 {
 	return frontIndex;
 }
 
 template<typename T>
-inline int aCircularQueue<T>::getBack()
+inline int aCircularQueue<T>::getBackIndex()
 {
-	if (frontIndex + size <= 0) { return 0; }
+	int ret = frontIndex + size - 1;
 
-	return capacity % (frontIndex + size);
+	if (ret < 0) { return 0; }
+	if (ret >= capacity) { ret = capacity % ret; } // check
+
+	return ret;
 }
 
 template<typename T>
@@ -67,13 +70,13 @@ inline aCircularQueue<T>::~aCircularQueue()
 template<typename T>
 inline T & aCircularQueue<T>::front()
 {
-	return arr[frontIndex];
+	return arr[getFrontIndex()];
 }
 
 template<typename T>
 inline T & aCircularQueue<T>::back()
 {
-	return arr[getBack()];
+	return arr[getBackIndex()];
 }
 
 template<typename T>
@@ -81,10 +84,8 @@ inline bool aCircularQueue<T>::push(const T & val)
 {
 	if (size >= capacity) { return false; }
 
-	arr[getBack()] = val;
 	size++;
-
-	T i = arr[frontIndex + size];
+	arr[getBackIndex()] = val;
 
 	return true;
 }
@@ -92,10 +93,10 @@ inline bool aCircularQueue<T>::push(const T & val)
 template<typename T>
 inline bool aCircularQueue<T>::pop()
 {
-	if (getSize <= 0) { return false; }
+	if (getSize() <= 0) { return false; }
 
-	front++;
-	if (front > capacity) { front = 0; }
+	frontIndex++;
+	if (frontIndex > capacity) { frontIndex = 0; }
 	size--;
 
 	return true;
