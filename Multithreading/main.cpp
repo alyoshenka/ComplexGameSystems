@@ -71,6 +71,15 @@ void runCircleQueueWithThreads()
 
 	for (int i = 1; i <= 10; i++) { a.pushUsingThread(i); }
 
+	a.resize(20);
+
+	for (int i = 11; i <= 20; i++) { a.pushUsingThread(i); }
+
+	assert(a.getSize() == 20);
+
+	while (!a.isEmpty()) { a.pop(); }
+
+	assert(a.isEmpty());
 }
 
 int main()

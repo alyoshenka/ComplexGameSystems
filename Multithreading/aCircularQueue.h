@@ -2,13 +2,12 @@
 
 #define DebugValues true
 
-#include <atomic>
-
 template<typename T>
 class aCircularQueue
 {
 private:
 	const static size_t defaultCapacity = 10;
+	const static size_t multiplier = 2;
 
 	T *arr;
 	size_t capacity;
@@ -18,8 +17,6 @@ private:
 
 	std::thread pushThread;
 	std::thread popThread;
-	std::atomic<int> pushIndex;
-	std::atomic<int> popIndex;
 
 	size_t getFrontIndex() const;
 	size_t getBackIndex() const;
@@ -41,6 +38,8 @@ public:
 
 	bool isEmpty() const;
 	size_t getSize() const;
+
+	bool resize(size_t newSize);
 };
 
 template<typename T>
@@ -127,6 +126,8 @@ inline void aCircularQueue<T>::pushUsingThread(const T & val)
 	std::lock_guard<std::mutex> guard(myMutex);
 
 	pushThread = std::thread(&aCircularQueue::push, this, val);
+
+	pushThread.join(); // this defeats the purpose
 }
 
 template<typename T>
@@ -136,6 +137,8 @@ inline void aCircularQueue<T>::popUsingThread()
 	std::lock_guard<std::mutex> guard(myMutex);
 
 	popThread = std::thread(&aCircularQueue::pop, this);
+
+	popThread.join();
 }
 
 template<typename T>
@@ -148,4 +151,27 @@ template<typename T>
 inline size_t aCircularQueue<T>::getSize() const
 {
 	return size;
+}
+
+template<typename T>
+inline bool aCircularQueue<T>::resize(size_t newCapacity) // test
+{
+	if (newCapacity <= size) { return false; }
+
+	size_t sizeHolder = size;
+
+	T *newArr = new T[newCapacity];
+	for (int i = 0; !isEmpty(); i++)
+	{
+		newArr[i] = front();
+		pop();
+	}
+
+	delete[] arr;
+	arr = newArr;
+	size = sizeHolder;
+	frontIndex = 0;
+	capacity = newCapacity; 
+
+	return true;
 }
