@@ -14,10 +14,7 @@ void runLogger()
 	// log.clearFile();
 	log.accept("-1");
 	log.write();
-	for (int i = 0; i < 5000; i++)
-	{
-		log.writeReusable(std::to_string(i + 1));
-	}
+	for (int i = 0; i < 5000; i++) { log.writeReusable(std::to_string(i + 1)); }
 
 	// log.assertCorrectOrder();
 }
@@ -32,6 +29,8 @@ void runCircleQueue()
 	int count = 5;
 	for (int i = 1; i <= count; i++) { a.push(i); }
 
+	std::cout << std::endl;
+
 	assert(a.getSize() == count);
 	assert(!a.isEmpty());
 	assert(a.front() == 1);
@@ -45,20 +44,43 @@ void runCircleQueue()
 
 	for (int i = 0; i < 4; i++) { a.pop(); }
 
+	std::cout << std::endl;
+
 	assert(a.isEmpty());
 
 	for (int i = 1; i <= 8; i++) 
 	{ 
-		std::cout << i << std::endl;
 		a.push(i); 
 	}
+
+	std::cout << std::endl;
+
+	// try to overflow
+	for (int i = 1; i <= 5; i++)
+	{
+		if (a.push(i + 8)) { std::cout << "push successful" << std::endl; }
+		else { std::cout << "push unsuccessful" << std::endl; }
+	}
+
+	std::cout << std::endl;
+}
+
+void runCircleQueueWithThreads()
+{
+	aCircularQueue<int> a;
+
+	for (int i = 1; i <= 10; i++) { a.pushUsingThread(i); }
+
 }
 
 int main()
 {
 	// runLogger();
-	runCircleQueue();
+	// runCircleQueue();
+	runCircleQueueWithThreads();
 
+	char n;
+	std::cin >> n;
 	return 0; 
 }
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#define DebugValues true
+
+#include <atomic>
+
 template<typename T>
 class aCircularQueue
 {
@@ -12,8 +16,13 @@ private:
 
 	size_t frontIndex;
 
-	int getFrontIndex();
-	int getBackIndex();
+	std::thread pushThread;
+	std::thread popThread;
+	std::atomic<int> pushIndex;
+	std::atomic<int> popIndex;
+
+	size_t getFrontIndex() const;
+	size_t getBackIndex() const;
 
 public:
 
@@ -21,29 +30,32 @@ public:
 	aCircularQueue(size_t capacity);
 	~aCircularQueue();
 
-	T& front();
-	T& back();
+	T& front() const;
+	T& back() const;
 
 	bool push(const T& val);
 	bool pop();
+
+	void pushUsingThread(const T& val);
+	void popUsingThread();
 
 	bool isEmpty() const;
 	size_t getSize() const;
 };
 
 template<typename T>
-inline int aCircularQueue<T>::getFrontIndex()
+inline size_t aCircularQueue<T>::getFrontIndex() const
 {
 	return frontIndex;
 }
 
 template<typename T>
-inline int aCircularQueue<T>::getBackIndex()
+inline size_t aCircularQueue<T>::getBackIndex() const
 {
-	int ret = frontIndex + size - 1;
+	size_t ret = frontIndex + size - 1;
 
 	if (ret < 0) { return 0; }
-	if (ret >= capacity) { ret = capacity % ret; } // check
+	if (ret >= capacity) { ret = ret % capacity; }
 
 	return ret;
 }
@@ -59,6 +71,8 @@ inline aCircularQueue<T>::aCircularQueue(size_t setCapacity)
 
 	size = 0;
 	frontIndex = 0;
+
+	// popThread = std::thread(&aCircularQueue::popUsingThread, this);
 }
 
 template<typename T>
@@ -68,13 +82,13 @@ inline aCircularQueue<T>::~aCircularQueue()
 }
 
 template<typename T>
-inline T & aCircularQueue<T>::front()
+inline T & aCircularQueue<T>::front() const
 {
 	return arr[getFrontIndex()];
 }
 
 template<typename T>
-inline T & aCircularQueue<T>::back()
+inline T & aCircularQueue<T>::back() const
 {
 	return arr[getBackIndex()];
 }
@@ -87,19 +101,41 @@ inline bool aCircularQueue<T>::push(const T & val)
 	size++;
 	arr[getBackIndex()] = val;
 
+	if (DebugValues) { std::cout << "pushed value " << val << " to index " << getBackIndex() << std::endl; }
+
 	return true;
 }
 
 template<typename T>
 inline bool aCircularQueue<T>::pop()
 {
-	if (getSize() <= 0) { return false; }
+	if (size <= 0) { return false; }
+
+	if (DebugValues) { std::cout << "popped value " << arr[getFrontIndex()] << " from index " << getFrontIndex() << std::endl; }
 
 	frontIndex++;
-	if (frontIndex > capacity) { frontIndex = 0; }
+	if (frontIndex >= capacity) { frontIndex = capacity % frontIndex; }
 	size--;
 
 	return true;
+}
+
+template<typename T>
+inline void aCircularQueue<T>::pushUsingThread(const T & val)
+{
+	static std::mutex myMutex;
+	std::lock_guard<std::mutex> guard(myMutex);
+
+	pushThread = std::thread(&aCircularQueue::push, this, val);
+}
+
+template<typename T>
+inline void aCircularQueue<T>::popUsingThread()
+{
+	static std::mutex myMutex;
+	std::lock_guard<std::mutex> guard(myMutex);
+
+	popThread = std::thread(&aCircularQueue::pop, this);
 }
 
 template<typename T>
