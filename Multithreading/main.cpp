@@ -75,11 +75,18 @@ void runCircleQueueWithThreads()
 
 	for (int i = 11; i <= 20; i++) { a.pushUsingThread(i); }
 
+	aCircularQueue<int> b(a);
+	aCircularQueue<int> c = a;
+
 	assert(a.getSize() == 20);
+	assert(b.getSize() == 20);
+	assert(c.getSize() == 20);
 
 	while (!a.isEmpty()) { a.pop(); }
 
 	assert(a.isEmpty());
+	assert(!b.isEmpty());
+	assert(c.getSize() == 20);
 }
 
 int main()

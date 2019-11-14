@@ -25,6 +25,8 @@ public:
 
 	aCircularQueue();
 	aCircularQueue(size_t capacity);
+	aCircularQueue(const aCircularQueue &copy);
+	aCircularQueue(aCircularQueue &&move);
 	~aCircularQueue();
 
 	T& front() const;
@@ -38,8 +40,14 @@ public:
 
 	bool isEmpty() const;
 	size_t getSize() const;
+	size_t getCapacity() const;
+	T* getData() const;
 
 	bool resize(size_t newSize);
+	void reset();
+
+	aCircularQueue operator = (const aCircularQueue &copy);
+	aCircularQueue& operator= (aCircularQueue &&move);
 };
 
 template<typename T>
@@ -72,6 +80,24 @@ inline aCircularQueue<T>::aCircularQueue(size_t setCapacity)
 	frontIndex = 0;
 
 	// popThread = std::thread(&aCircularQueue::popUsingThread, this);
+}
+
+template<typename T>
+inline aCircularQueue<T>::aCircularQueue(const aCircularQueue &copy)
+{
+	capacity = copy.getCapacity();
+	size = copy.getSize();
+	arr = new T[capacity];
+	
+	T* temp = copy.getData();
+	for (int i = 0; i < copy.getSize(); i++) { arr[i] = temp[i]; } // does this work?
+}
+
+template<typename T>
+inline aCircularQueue<T>::aCircularQueue(aCircularQueue && move)
+{
+	this = aCircularQueue(move); // is this the correct implementation
+	move.reset();
 }
 
 template<typename T>
@@ -154,6 +180,18 @@ inline size_t aCircularQueue<T>::getSize() const
 }
 
 template<typename T>
+inline size_t aCircularQueue<T>::getCapacity() const
+{
+	return capacity;
+}
+
+template<typename T>
+inline T * aCircularQueue<T>::getData() const
+{
+	return arr;
+}
+
+template<typename T>
 inline bool aCircularQueue<T>::resize(size_t newCapacity) // test
 {
 	if (newCapacity <= size) { return false; }
@@ -175,3 +213,28 @@ inline bool aCircularQueue<T>::resize(size_t newCapacity) // test
 
 	return true;
 }
+
+template<typename T>
+inline void aCircularQueue<T>::reset()
+{
+	delete[] arr;
+	arr = nullptr;
+	size = 0;
+	capacity = defaultCapacity;
+	frontIndex = 0;
+}
+
+template<typename T>
+inline aCircularQueue<T> aCircularQueue<T>::operator=(const aCircularQueue & equal)
+{
+	return aCircularQueue(equal);
+}
+
+template<typename T>
+inline aCircularQueue<T> & aCircularQueue<T>::operator=(aCircularQueue && move)
+{
+	aCircularQueue ret = move;
+	move.reset();
+	return ret; // does this work
+}
+
