@@ -106,7 +106,7 @@ int client::part2()
 		if (bytes_received == SOCKET_ERROR)
 		{
 			printf("recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError());
-			break;
+			return -1;
 		}
 
 		// grab data from packet
