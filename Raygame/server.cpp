@@ -81,16 +81,11 @@ bool server::run_connection()
 		client_input);
 
 	client * current_player = nullptr;
-	if(client_input == 97) 
-	{ 
-		current_player = find_player(from); 
-	}
-	if (nullptr == current_player) 
-	{ 
-		current_player = add_new_player(from);
-	}
+	current_player = find_player(from);
+	if (nullptr == current_player) { current_player = add_new_player(from); }
 
 	current_player->data.value++;
+	printf("player %s data updated to: %d", current_player->get_address_string(), current_player->data.value);
 
 	// create state packet, copy into buffer
 	write_index = 0;

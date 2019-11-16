@@ -62,13 +62,13 @@ void client::set_address(SOCKADDR_IN new_address)
 std::string client::get_address_string()
 {
 	std::string ret = "";
-	ret += address.sin_addr.S_un.S_un_b.s_b1;
+	ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b1);
 	ret += ".";
-	ret += address.sin_addr.S_un.S_un_b.s_b2;
+	ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b2);
 	ret += ".";
-	ret += address.sin_addr.S_un.S_un_b.s_b3;
+	ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b3);
 	ret += ".";
-	ret += address.sin_addr.S_un.S_un_b.s_b4;
+	ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b4);
 	return ret;
 }
 
