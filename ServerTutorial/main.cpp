@@ -7,7 +7,6 @@
 #pragma warning(disable:4996)
 
 #include "Server.h"
-
 int main()
 {
 	server host;
