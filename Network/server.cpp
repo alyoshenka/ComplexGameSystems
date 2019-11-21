@@ -1,14 +1,14 @@
 #include "server.h"
-
+#include "helpers.h"
 
 namespace Network
 {
-	bool server::check_if_new_player(SOCKADDR_IN queried_client)
+	bool server::check_if_new_player(address_struct queried_client)
 	{
 		bool found_player = false;
 		for (int i = 0; i < current_player_count; i++)
 		{
-			if (check_address_equality(players[i]->get_address(), queried_client)) { found_player = true; }
+			if (players[i]->get_address() == queried_client) { found_player = true; }
 		}
 		return found_player;
 	}
@@ -21,12 +21,7 @@ namespace Network
 			&& addr_1.sin_addr.S_un.S_un_b.s_b4 == addr_2.sin_addr.S_un.S_un_b.s_b4;
 	}
 
-	bool server::check_address_equality(client player, SOCKADDR_IN address)
-	{
-		return check_address_equality(player.get_address(), address);
-	}
-
-	client* server::add_new_player(SOCKADDR_IN new_address)
+	client* server::add_new_player(address_struct new_address)
 	{
 		if (current_player_count >= MAX_PLAYER_COUNT)
 		{
@@ -36,10 +31,13 @@ namespace Network
 
 		client* new_player = new client();
 		new_player->set_address(new_address);
+		std::cout << "set player address to " << new_address.a << "." << new_address.b
+			<< "." << new_address.c << "." << new_address.d << std::endl;
+		std::cout << "new player's address: " << new_player->get_address_string() << std::endl;
 
-		players[current_player_count] = new_player;
+		players[current_player_count] = new_player; 
 		current_player_count++;
-		printf("added new player %s\n", new_player->get_address_string());
+		std::cout << "added new player " << new_player->get_address_string() << std::endl;
 
 		return new_player;
 	}
@@ -67,6 +65,7 @@ namespace Network
 
 	bool server::run_connection()
 	{
+		SOCKADDR f;
 		int bytes_recieved = recvfrom(sock, buffer, IDENTIFY_BUFFER_SIZE, flags, (SOCKADDR*)& from, &from_size);
 		if (bytes_recieved == SOCKET_ERROR)
 		{
@@ -74,23 +73,18 @@ namespace Network
 			return FAIL;
 		}
 
-		if (check_if_new_player(from)) { add_new_player(from); }
-
-		char client_input = buffer[0];
-		printf("player %d.%d.%d.%d:%d sent data: %c\n",
-			from.sin_addr.S_un.S_un_b.s_b1,
-			from.sin_addr.S_un.S_un_b.s_b2,
-			from.sin_addr.S_un.S_un_b.s_b3,
-			from.sin_addr.S_un.S_un_b.s_b4,
-			from.sin_port,
-			client_input);
+		char* from_char = inet_ntoa(((sockaddr_in)from).sin_addr);
+		address_struct from_address = char_to_address(from_char);
 
 		client* current_player = nullptr;
-		current_player = find_player(from);
-		if (nullptr == current_player) { current_player = add_new_player(from); }
+		current_player = find_player(from_address);
+		if (nullptr == current_player) { current_player = add_new_player(from_address); }
+
+		char client_input = buffer[0];
+		std::cout << "player " << current_player->get_address_string() << " sent data: " << client_input << std::endl;
 
 		current_player->data.value++;
-		printf("player %s data updated to: %d", current_player->get_address_string(), current_player->data.value);
+		std::cout << "player " << current_player->get_address_string() << " data updated to: " << current_player->data.value << std::endl;
 
 		// create state packet, copy into buffer
 		write_index = 0;
@@ -120,11 +114,11 @@ namespace Network
 		return PASS;
 	}
 
-	client* server::find_player(SOCKADDR_IN player_address)
+	client* server::find_player(address_struct player_address)
 	{
 		for (int i = 0; i < current_player_count; i++)
 		{
-			if (check_address_equality(*players[i], player_address)) { return players[i]; }
+			if (players[i]->get_address() == player_address) { return players[i]; }
 		}
 		return nullptr;
 	}

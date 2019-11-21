@@ -129,11 +129,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="helpers.cpp" />
     <ClCompile Include="network_connection.cpp" />
     <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client.h" />
+    <ClInclude Include="helpers.h" />
     <ClInclude Include="network_connection.h" />
     <ClInclude Include="player_data.h" />
     <ClInclude Include="server.h" />

@@ -17,10 +17,9 @@ namespace Network
 
 		bool bind_socket();
 
-		bool check_if_new_player(SOCKADDR_IN queried_address);
+		bool check_if_new_player(address_struct queried_address);
 		bool check_address_equality(SOCKADDR_IN addr_1, SOCKADDR_IN addr_2);
-		bool check_address_equality(client player, SOCKADDR_IN address);
-		client* add_new_player(SOCKADDR_IN new_address);
+		client* add_new_player(address_struct new_address);
 
 	public:
 
@@ -29,7 +28,7 @@ namespace Network
 		bool initialize_connection() final;
 		bool run_connection() final;
 
-		client* find_player(SOCKADDR_IN player_address);
+		client* find_player(address_struct player_address);
 	};
 }
 

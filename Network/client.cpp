@@ -4,10 +4,6 @@ namespace Network
 {
 	client::client() : network_connection()
 	{
-		address.sin_addr.S_un.S_un_b.s_b1 = 0;
-		address.sin_addr.S_un.S_un_b.s_b2 = 0;
-		address.sin_addr.S_un.S_un_b.s_b3 = 0;
-		address.sin_addr.S_un.S_un_b.s_b4 = 0;
 
 		recipient = (SOCKADDR*)& server_address;
 		recipient_length = sizeof(server_address);
@@ -56,37 +52,28 @@ namespace Network
 		read_index = 0;
 		memcpy(&data.value, &buffer[read_index], sizeof(&data.value));
 
-		printf("player data value: %d\n", data.value);
+		std::cout << "player data value: " << data.value << std::endl;
 	}
 
-	SOCKADDR_IN client::get_address() { return address; }
+	address_struct client::get_address() { return address; }
 
-	void client::set_address(SOCKADDR_IN new_address)
+	void client::set_address(address_struct new_address)
 	{
-		address = new_address;
+		address.a = new_address.a;
+		address.b = new_address.b;
+		address.c = new_address.c;
+		address.d = new_address.d;
 	}
 
 	std::string client::get_address_string()
 	{
-		std::string ret = "";
-		ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b1);
-		ret += ".";
-		ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b2);
-		ret += ".";
-		ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b3);
-		ret += ".";
-		ret += std::to_string(address.sin_addr.S_un.S_un_b.s_b4);
-		return ret;
+		return std::to_string(address.a) + "." + std::to_string(address.b) 
+			+ "." + std::to_string(address.c) + "." + std::to_string(address.d);
 	}
 
 	bool client::operator==(client& lhs)
 	{
-		SOCKADDR_IN lhs_address = lhs.get_address();
-
-		return lhs_address.sin_addr.S_un.S_un_b.s_b1 == address.sin_addr.S_un.S_un_b.s_b1
-			&& lhs_address.sin_addr.S_un.S_un_b.s_b2 == address.sin_addr.S_un.S_un_b.s_b2
-			&& lhs_address.sin_addr.S_un.S_un_b.s_b3 == address.sin_addr.S_un.S_un_b.s_b3
-			&& lhs_address.sin_addr.S_un.S_un_b.s_b4 == address.sin_addr.S_un.S_un_b.s_b4;
+		return address == lhs.get_address();
 	}
 
 }
