@@ -1,6 +1,6 @@
 #include "network_connection.h"
 
-namespace Network
+namespace GameNetwork
 {
 	bool network_connection::initialize_win_sock()
 	{

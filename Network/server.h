@@ -1,18 +1,14 @@
 #pragma once
 
-#include "network_connection.h"
 #include "client.h"
 
-
-namespace Network
+namespace GameNetwork
 {
 	class server : network_connection
 	{
-		const static int MAX_PLAYER_COUNT = 5;
-
 		int write_index;
 
-		client* players[MAX_PLAYER_COUNT];
+		client* connections[MAX_PLAYER_COUNT];
 		int current_player_count;
 
 		bool bind_socket();

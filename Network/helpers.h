@@ -4,8 +4,11 @@
 #include <iostream>
 #include <string>
 
-namespace Network
+namespace GameNetwork
 {
+
+#define MAX_PLAYER_COUNT 5
+
 	struct address_struct
 	{
 		int a, b, c, d;

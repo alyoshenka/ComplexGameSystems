@@ -1,14 +1,13 @@
 #include "server.h"
-#include "helpers.h"
 
-namespace Network
+namespace GameNetwork
 {
 	bool server::check_if_new_player(address_struct queried_client)
 	{
 		bool found_player = false;
 		for (int i = 0; i < current_player_count; i++)
 		{
-			if (players[i]->get_address() == queried_client) { found_player = true; }
+			if (connections[i]->get_address() == queried_client) { found_player = true; }
 		}
 		return found_player;
 	}
@@ -31,11 +30,8 @@ namespace Network
 
 		client* new_player = new client();
 		new_player->set_address(new_address);
-		std::cout << "set player address to " << new_address.a << "." << new_address.b
-			<< "." << new_address.c << "." << new_address.d << std::endl;
-		std::cout << "new player's address: " << new_player->get_address_string() << std::endl;
 
-		players[current_player_count] = new_player; 
+		connections[current_player_count] = new_player; 
 		current_player_count++;
 		std::cout << "added new player " << new_player->get_address_string() << std::endl;
 
@@ -51,10 +47,10 @@ namespace Network
 
 	bool server::initialize_connection()
 	{
-		if (initialize_win_sock() == -1
-			|| initialize_socket() == -1
-			|| initialize_address() == -1
-			|| bind_socket() == -1)
+		if (! initialize_win_sock()
+			|| ! initialize_socket()
+			|| ! initialize_address()
+			|| ! bind_socket())
 		{
 			printf("server failed\n");
 			return FAIL;
@@ -118,7 +114,7 @@ namespace Network
 	{
 		for (int i = 0; i < current_player_count; i++)
 		{
-			if (players[i]->get_address() == player_address) { return players[i]; }
+			if (connections[i]->get_address() == player_address) { return connections[i]; }
 		}
 		return nullptr;
 	}

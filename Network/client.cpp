@@ -1,6 +1,6 @@
 #include "client.h"
 
-namespace Network
+namespace GameNetwork
 {
 	client::client() : network_connection()
 	{
@@ -8,7 +8,6 @@ namespace Network
 		recipient = (SOCKADDR*)& server_address;
 		recipient_length = sizeof(server_address);
 
-		data = { -1 };
 		read_index = -1;
 
 		printf("client started\n");

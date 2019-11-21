@@ -6,7 +6,7 @@
 
 int main()
 {
-	Network::server host;
+	GameNetwork::server host;
 
 	host.initialize_connection();
 

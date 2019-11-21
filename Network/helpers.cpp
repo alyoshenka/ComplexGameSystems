@@ -1,8 +1,8 @@
 #include "helpers.h"
 
-namespace Network
+namespace GameNetwork
 {
-	std::string Network::socket_address_to_string(SOCKADDR_IN &addr)
+	std::string GameNetwork::socket_address_to_string(SOCKADDR_IN &addr)
 	{
 		std::string ret = "";
 		ret += addr.sin_addr.S_un.S_un_b.s_b1 + ".";

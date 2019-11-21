@@ -1,12 +1,10 @@
 #pragma once
 
 #include "network_connection.h"
-#include "player_data.h"
+#include "player.h"
 #include "helpers.h"
 
-#include <string>
-
-namespace Network
+namespace GameNetwork
 {
 	class client : network_connection
 	{
@@ -19,7 +17,7 @@ namespace Network
 
 	public:
 
-		player_data data;
+		player data;
 
 		client();
 

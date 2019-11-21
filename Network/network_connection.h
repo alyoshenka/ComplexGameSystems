@@ -2,19 +2,19 @@
 
 #include <WinSock2.h>
 #include <stdio.h>
-#include <iostream>
 
 #pragma warning(disable:4996)
 
 #define FAIL false;
 #define PASS true;
 
-namespace Network
+namespace GameNetwork
 {
 	class network_connection
 	{
 	protected:
 
+#pragma region ConnectionVars
 		const int port = 9999;
 		const char* server_string;
 
@@ -34,6 +34,7 @@ namespace Network
 		SOCKADDR_IN from;
 		int from_size;
 		int bytes_received;
+#pragma endregion
 
 		network_connection();
 

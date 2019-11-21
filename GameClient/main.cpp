@@ -2,10 +2,12 @@
 
 #include "client.h"
 
+#include "game.h"
+
 
 int main()
 {
-	Network::client player;
+	GameNetwork::client player;
 
 	player.initialize_connection();
 
