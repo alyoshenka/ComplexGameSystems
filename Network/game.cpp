@@ -1,11 +1,11 @@
 #include "game.h"
-#include "thirdparty/raylib/raylib.h"
+// #include "thirdparty/raylib/raylib.h"
 
 namespace GameNetwork
 {
 	void game::init()
 	{
-		InitWindow(300, 200, "game");
+		// InitWindow(300, 200, "game");
 	}
 
 	void game::tick()
@@ -14,7 +14,7 @@ namespace GameNetwork
 	}
 
 	void game::draw()
-	{
+	{/*
 		BeginDrawing();
 
 		ClearBackground(GRAY);
@@ -24,12 +24,12 @@ namespace GameNetwork
 			players[i].draw();
 		}
 
-		EndDrawing();
+		EndDrawing();*/
 	}
 
 	void game::exit()
 	{
-		CloseWindow();
+		// CloseWindow();
 	}
 
 	bool game::add_player(player new_player)
@@ -45,6 +45,7 @@ namespace GameNetwork
 
 	bool game::should_close()
 	{
-		return WindowShouldClose();
+		// return WindowShouldClose();
+		return false;
 	}
 }

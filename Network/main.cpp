@@ -1,11 +1,11 @@
-// #include "game.h"
-// #include "player.h"
+
+#include "game.h"
+
 
 int main()
 {
-	/*
 	GameNetwork::game app;
-	GameNetwork::player p1({ 100, 100 });
+	GameNetwork::player p1;
 
 	app.init();
 	app.add_player(p1);
@@ -17,7 +17,6 @@ int main()
 	}
 
 	app.exit();
-	*/
 
 	return 0;
 }
