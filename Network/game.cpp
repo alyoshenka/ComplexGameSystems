@@ -1,11 +1,17 @@
 #include "game.h"
-// #include "thirdparty/raylib/raylib.h"
 
 namespace GameNetwork
 {
+	game::game()
+	{
+		connected_player_count = 0;
+	}
+
+	game::~game() { }
+
 	void game::init()
 	{
-		// InitWindow(300, 200, "game");
+		InitWindow(300, 200, "game");
 	}
 
 	void game::tick()
@@ -14,25 +20,26 @@ namespace GameNetwork
 	}
 
 	void game::draw()
-	{/*
+	{
 		BeginDrawing();
 
 		ClearBackground(GRAY);
 
 		for (int i = 0; i < connected_player_count; i++)
 		{
-			players[i].draw();
+			players[i]->draw();
 		}
 
-		EndDrawing();*/
+		EndDrawing();
 	}
 
 	void game::exit()
 	{
-		// CloseWindow();
+		std::cout << "should close" << std::endl;
+		// RayCloseWindow();
 	}
 
-	bool game::add_player(player new_player)
+	bool game::add_player(player *new_player)
 	{
 		if (connected_player_count >= MAX_PLAYER_COUNT) { return false; }
 
@@ -45,7 +52,6 @@ namespace GameNetwork
 
 	bool game::should_close()
 	{
-		// return WindowShouldClose();
-		return false;
+		return WindowShouldClose();
 	}
 }

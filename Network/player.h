@@ -1,6 +1,6 @@
 #pragma once
 
-// #include "thirdparty/raylib/raylib.h"
+#include "thirdparty/raylib/raylib.h"
 
 
 namespace GameNetwork
@@ -10,11 +10,11 @@ namespace GameNetwork
 		int value;
 
 		int size;
-		// Raylib::Color color;
+		Color color;
 		float speed;
 
-		// Raylib::Vector2 pos;
-		// Raylib::Vector2 dir;
+		Vector2 pos;
+		Vector2 dir;
 
 	public:
 		enum Direction
@@ -26,7 +26,7 @@ namespace GameNetwork
 		};
 
 		player();
-		// player(Raylib::Vector2 start_pos);
+		player(Vector2 start_pos);
 		player(const player &copy_player);
 
 		void draw();
