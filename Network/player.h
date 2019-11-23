@@ -14,14 +14,13 @@ namespace GameNetwork
 		Color color;
 		float speed;
 
-		Vector2 pos;
 		Vector2 dir;
 
 		address_struct address;
 
 	public:
 
-		int x;
+		Vector2 pos;
 
 		enum Direction
 		{

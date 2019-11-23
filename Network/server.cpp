@@ -61,16 +61,32 @@ namespace GameNetwork
 		char client_input = buffer[0];
 		std::cout << "player " << current_player->get_address_string() << " sent data: " << client_input << std::endl;
 
-		current_player->x += 5;
-		std::cout << "player " << current_player->get_address_string() << " data updated to: " << current_player->x << std::endl;
+		switch (client_input)
+		{
+		case 'w':
+			current_player->pos.y -= current_player->speed;
+			break;
+		case 's':
+			current_player->pos.y += current_player->speed;
+			break;
+		case 'a':
+			current_player->pos.x -= current_player->speed;
+			break;
+		case 'd':
+			current_player->pos.x += current_player->speed;
+			break;
+		default:
+			std::cout << "invalid input: " << client_input << std::endl;
+		}
+		std::cout << "player " << current_player->get_address_string() << " data updated to: (" << current_player->pos.x << ", " << current_player->pos.y << ")" << std::endl;
 
 		// create state packet, copy into buffer
 		write_index = 0;
-		memcpy(&buffer[write_index], &(current_player->x), sizeof(&(current_player->x)));
+		memcpy(&buffer[write_index], &(current_player->pos), sizeof(Vector2));
 		write_index++;
 
 		// send back to client
-		int buffer_length = sizeof(current_player->x);
+		int buffer_length = sizeof(Vector2);
 		SOCKADDR* to = (SOCKADDR*)& from;
 		int to_length = sizeof(from);
 		if (sendto(sock, buffer, buffer_length, flags, to, to_length) == SOCKET_ERROR)

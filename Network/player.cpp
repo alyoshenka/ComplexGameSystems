@@ -14,8 +14,6 @@ namespace GameNetwork
 
 		pos = start_pos;
 		dir = { 1, 0 };
-
-		x = 20;
 	}
 
 	player::player(const player& copy_player)
@@ -32,7 +30,7 @@ namespace GameNetwork
 
 	void player::draw()
 	{
-		DrawCircle(x, pos.y, size, color);
+		DrawCircleV(pos, size, color);
 	}
 
 	void player::set_address(address_struct new_address)

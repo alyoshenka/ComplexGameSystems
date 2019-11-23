@@ -17,6 +17,7 @@ void client_thread(GameNetwork::client c)
 
 int main()
 {
+	std::cout << sizeof(GameNetwork::player) << std::endl;
 
 	if (Server)
 	{
@@ -42,6 +43,8 @@ int main()
 		app->add_player(&p1); // not setting address
 
 		std::thread connection_thread(client_thread, player);
+
+		std::cout << sizeof(p1) << std::endl;
 
 		while (!app->should_close())
 		{

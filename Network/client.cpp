@@ -64,9 +64,9 @@ namespace GameNetwork
 
 		// grab data from packet
 		read_index = 0;
-		memcpy(&player_to_update->x, &buffer[read_index], sizeof(&(player_to_update->x)));
+		memcpy(&player_to_update->pos, &buffer[read_index], sizeof(&(player_to_update->pos)));
 
-		std::cout << "player data value: " << player_to_update->x << std::endl;
+		std::cout << "player data value: (" << player_to_update->pos.x << ", " << player_to_update->pos.y << ")" << std::endl;
 
 		return PASS;
 	}
