@@ -4,10 +4,20 @@
 #include "client.h"
 #include "helpers.h"
 
+#include <thread>
+
+
 #define Server false
+
+
+void client_thread(GameNetwork::client c)
+{
+	while(true){ c.run_connection(); }
+}
 
 int main()
 {
+
 	if (Server)
 	{
 		GameNetwork::server host;
@@ -17,8 +27,10 @@ int main()
 	}
 	else
 	{
+
 		GameNetwork::client player;
 		player.initialize_connection();
+
 
 		GameNetwork::game *app = player.get_game();
 		GameNetwork::player p1({ 50, 50 });
@@ -29,15 +41,18 @@ int main()
 		app->init();
 		app->add_player(&p1); // not setting address
 
-		while (true)
-		{
-			player.run_connection();
+		std::thread connection_thread(client_thread, player);
 
-			// app.tick();
-			// app.draw();
+		while (!app->should_close())
+		{
+			app->tick();
+			app->draw();
+
+			// connection_thread.join();
+			// connect data
 		}
 
-		// app.exit();
+		app->exit();
 	}
 	
 

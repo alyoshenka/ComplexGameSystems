@@ -32,7 +32,7 @@ namespace GameNetwork
 
 	void player::draw()
 	{
-		DrawCircleV(pos, size, color);
+		DrawCircle(x, pos.y, size, color);
 	}
 
 	void player::set_address(address_struct new_address)
