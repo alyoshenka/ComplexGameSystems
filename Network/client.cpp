@@ -1,10 +1,10 @@
 #include "client.h"
+#include <cassert>
 
 namespace GameNetwork
 {
 	client::client() : network_connection()
 	{
-
 		recipient = (SOCKADDR*)& server_address;
 		recipient_length = sizeof(server_address);
 
@@ -47,11 +47,28 @@ namespace GameNetwork
 			return FAIL;
 		}
 
+		address_struct player_address
+		(
+			from.sin_addr.S_un.S_un_b.s_b1,
+			from.sin_addr.S_un.S_un_b.s_b2,
+			from.sin_addr.S_un.S_un_b.s_b3,
+			from.sin_addr.S_un.S_un_b.s_b4
+		);
+
+		player * player_to_update = app->find_player(player_address);
+		if(nullptr == player_to_update)
+		{
+			std::cout << "could not update player -> player " << player_address.a << "." << player_address.b << "." << player_address.c << "." << player_address.d << " not found " << std::endl;
+			return FAIL;
+		}
+
 		// grab data from packet
 		read_index = 0;
-		memcpy(&data.value, &buffer[read_index], sizeof(&data.value));
+		memcpy(&player_to_update->x, &buffer[read_index], sizeof(&(player_to_update->x)));
 
-		std::cout << "player data value: " << data.value << std::endl;
+		std::cout << "player data value: " << player_to_update->x << std::endl;
+
+		return PASS;
 	}
 
 	address_struct client::get_address() { return address; }
@@ -64,15 +81,14 @@ namespace GameNetwork
 		address.d = new_address.d;
 	}
 
-	std::string client::get_address_string()
-	{
-		return std::to_string(address.a) + "." + std::to_string(address.b) 
-			+ "." + std::to_string(address.c) + "." + std::to_string(address.d);
-	}
-
 	bool client::operator==(client& lhs)
 	{
 		return address == lhs.get_address();
+	}
+
+	game * client::get_game()
+	{
+		return app;
 	}
 
 }

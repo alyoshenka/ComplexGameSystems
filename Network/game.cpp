@@ -54,4 +54,24 @@ namespace GameNetwork
 	{
 		return WindowShouldClose();
 	}
+
+	bool game::check_if_new_player(address_struct queried_client)
+	{
+		bool found_player = false;
+		for (int i = 0; i < connected_player_count; i++)
+		{
+			if (players[i]->get_address() == queried_client) { found_player = true; }
+		}
+		return found_player;
+	}
+
+
+	player* game::find_player(address_struct player_address)
+	{
+		for (int i = 0; i < connected_player_count; i++)
+		{
+			if (players[i]->get_address() == player_address) { return players[i]; }
+		}
+		return nullptr;
+	}
 }

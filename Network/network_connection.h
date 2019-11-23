@@ -2,6 +2,7 @@
 
 #include <WinSock2.h>
 #include <stdio.h>
+#include "game.h"
 
 #pragma warning(disable:4996)
 
@@ -36,7 +37,10 @@ namespace GameNetwork
 		int bytes_received;
 #pragma endregion
 
+		game *app;
+
 		network_connection();
+		~network_connection();
 
 		bool initialize_win_sock();
 		bool initialize_socket();

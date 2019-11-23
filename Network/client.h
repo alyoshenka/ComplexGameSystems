@@ -1,7 +1,6 @@
 #pragma once
 
 #include "network_connection.h"
-#include "player.h"
 #include "helpers.h"
 
 namespace GameNetwork
@@ -17,8 +16,6 @@ namespace GameNetwork
 
 	public:
 
-		player data;
-
 		client();
 
 		bool initialize_connection() final;
@@ -26,8 +23,9 @@ namespace GameNetwork
 
 		address_struct get_address();
 		void set_address(address_struct new_address);
-		std::string get_address_string();
 
 		bool operator == (client& lhs);
+
+		game* get_game();
 	};
 }

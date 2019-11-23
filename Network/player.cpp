@@ -14,6 +14,8 @@ namespace GameNetwork
 
 		pos = start_pos;
 		dir = { 1, 0 };
+
+		x = 20;
 	}
 
 	player::player(const player& copy_player)
@@ -31,6 +33,22 @@ namespace GameNetwork
 	void player::draw()
 	{
 		DrawCircleV(pos, size, color);
+	}
+
+	void player::set_address(address_struct new_address)
+	{
+		address = new_address;
+	}
+
+	address_struct player::get_address()
+	{
+		return address;
+	}
+
+	std::string player::get_address_string()
+	{
+		return std::to_string(address.a) + "." + std::to_string(address.b)
+			+ "." + std::to_string(address.c) + "." + std::to_string(address.d);
 	}
 
 	player player::operator=(const player &lhs)

@@ -21,7 +21,8 @@ namespace GameNetwork
 		void exit();
 
 		bool add_player(player *new_player);
-
+		bool check_if_new_player(address_struct queried_address);
+		player* find_player(address_struct player_address);
 		bool should_close();
 	};
 }

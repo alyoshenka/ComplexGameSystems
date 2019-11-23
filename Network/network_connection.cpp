@@ -5,7 +5,6 @@ namespace GameNetwork
 	bool network_connection::initialize_win_sock()
 	{
 		winsock_version = 0x202;
-		winsock_data;
 
 		if (WSAStartup(winsock_version, &winsock_data))
 		{
@@ -40,10 +39,18 @@ namespace GameNetwork
 
 	network_connection::network_connection()
 	{
-		server_string = "192.168.0.9";
+		// server_string = "192.168.0.9";
+		server_string = "10.15.20.16";
 
 		flags = 0;
 		from_size = sizeof(from);
+
+		app = new game();
+	}
+
+	network_connection::~network_connection()
+	{
+		delete[] app;
 	}
 }
 
